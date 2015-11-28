@@ -1,0 +1,602 @@
+------------------------------------------------------------------
+-- My2Pg 1.32 translated dump
+--
+------------------------------------------------------------------
+
+BEGIN;
+
+
+-- MySQL dump 10.13  Distrib 5.5.24, for Linux (x86_64)
+--
+-- Host: localhost    Database: kyberia
+-- ------------------------------------------------------
+-- Server version	5.5.24-log
+
+
+--
+-- Table structure for table 'I'
+--
+
+;
+CREATE TABLE 'I' (
+  'node_id' INT4 NOT NULL DEFAULT '0',
+  'cas' timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+--
+-- Dumping data for table 'I'
+--
+
+LOCK TABLES 'I' WRITE;
+
+UNLOCK TABLES;
+
+--
+-- Table structure for table 'customized_node'
+--
+
+;
+CREATE TABLE 'customized_node' (
+  'customized_node_id' INT4 NOT NULL AUTO_INCREMENT,
+  'user_id' INT4 NOT NULL,
+  'node_id' INT4 NOT NULL,
+  'column' INT4 NOT NULL DEFAULT '1',
+  'module_id' INT4 NOT NULL,
+  'position' INT4 NOT NULL DEFAULT '1',
+  PRIMARY KEY ('customized_node_id')
+
+);
+
+--
+-- Dumping data for table 'customized_node'
+--
+
+LOCK TABLES 'customized_node' WRITE;
+UNLOCK TABLES;
+
+--
+-- Table structure for table 'del'
+--
+
+;
+CREATE TABLE 'del' (
+  'node_id' INT4 NOT NULL,
+  'node_vector' varchar(400) NOT NULL,
+  PRIMARY KEY ('node_id')
+
+);
+
+--
+-- Dumping data for table 'del'
+--
+
+LOCK TABLES 'del' WRITE;
+UNLOCK TABLES;
+
+--
+-- Table structure for table 'deleted'
+--
+
+;
+CREATE TABLE 'deleted' (
+  'node_id' INT4 NOT NULL,
+  'node_name' varchar(132) NOT NULL,
+  'node_parent' INT4 NOT NULL,
+  'node_external_access' INT2 NOT NULL,
+  'node_system_access' enum('public','moderated','private','cube','crypto') NOT NULL,
+  'node_children_count' INT4 NOT NULL,
+  'node_creator' INT4 NOT NULL,
+  'node_created' TIMESTAMP NOT NULL,
+  'lastchild_created' TIMESTAMP NOT NULL,
+  'k' INT4 NOT NULL,
+  'node_views' INT4 NOT NULL,
+  'node_descendant_count' INT4 NOT NULL,
+  'lastdescendant_created' TIMESTAMP NOT NULL,
+  'template_id' INT4 NOT NULL,
+  'node_updated' TIMESTAMP NOT NULL,
+  'external_link' varchar(123) NOT NULL,
+  'node_vector' varchar(230) NOT NULL,
+  'node_content' TEXT DEFAULT '' NOT NULL,
+  'node_destructor' INT4 NOT NULL,
+  'node_destructed' TIMESTAMP NOT NULL,
+  PRIMARY KEY ('node_id')
+
+  FULLTEXT KEY 'node_vector' ('node_vector')
+);
+
+--
+-- Dumping data for table 'deleted'
+--
+
+LOCK TABLES 'deleted' WRITE;
+UNLOCK TABLES;
+
+--
+-- Table structure for table 'distribute'
+--
+
+;
+CREATE TABLE 'distribute' (
+  'node_id' INT4 NOT NULL
+);
+
+--
+-- Dumping data for table 'distribute'
+--
+
+LOCK TABLES 'distribute' WRITE;
+UNLOCK TABLES;
+
+--
+-- Table structure for table 'levenshtein'
+--
+
+;
+CREATE TABLE 'levenshtein' (
+  'user_id' INT4 DEFAULT NULL,
+  'node_id' INT4 DEFAULT NULL,
+  'access_time' timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+--
+-- Dumping data for table 'levenshtein'
+--
+
+LOCK TABLES 'levenshtein' WRITE;
+UNLOCK TABLES;
+
+--
+-- Table structure for table 'logs'
+--
+
+;
+CREATE TABLE 'logs' (
+  'node_id' INT4 DEFAULT NULL,
+  'user_id' INT4 DEFAULT NULL,
+  'event' varchar(23) DEFAULT NULL,
+  'parameter1' varchar(23) DEFAULT NULL,
+  'parameter2' varchar(23) DEFAULT NULL,
+  'result' varchar(10) DEFAULT NULL,
+  'timestamp' timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+--
+-- Dumping data for table 'logs'
+--
+
+LOCK TABLES 'logs' WRITE;
+UNLOCK TABLES;
+
+--
+-- Table structure for table 'mail'
+--
+
+;
+CREATE TABLE 'mail' (
+  'mail_id' INT4 NOT NULL AUTO_INCREMENT,
+  'mail_user' INT4 NOT NULL DEFAULT '0',
+  'mail_from' INT4 NOT NULL DEFAULT '0',
+  'mail_to' INT4 NOT NULL DEFAULT '0',
+  'mail_text' text,
+  'mail_timestamp' TIMESTAMP NOT NULL DEFAULT '0001-01-01 00:00:00',
+  'mail_read' enum('yes','no') DEFAULT 'no',
+  'mail_duplicate_id' INT4 DEFAULT NULL,
+  PRIMARY KEY ('mail_id')
+
+);
+
+--
+-- Dumping data for table 'mail'
+--
+
+LOCK TABLES 'mail' WRITE;
+UNLOCK TABLES;
+
+--
+-- Table structure for table 'mail_archive'
+--
+
+;
+CREATE TABLE 'mail_archive' (
+  'mail_archive_id' INT4 NOT NULL AUTO_INCREMENT,
+  'user_id' INT4 NOT NULL,
+  'user_from' INT4 NOT NULL,
+  'user_to' INT4 NOT NULL,
+  'date' TIMESTAMP NOT NULL,
+  'text' TEXT DEFAULT '' NOT NULL,
+  PRIMARY KEY ('mail_archive_id')
+
+);
+
+--
+-- Dumping data for table 'mail_archive'
+--
+
+LOCK TABLES 'mail_archive' WRITE;
+UNLOCK TABLES;
+
+--
+-- Table structure for table 'memento'
+--
+
+;
+CREATE TABLE 'memento' (
+  'text' char(100) DEFAULT NULL
+);
+
+--
+-- Dumping data for table 'memento'
+--
+
+LOCK TABLES 'memento' WRITE;
+COPY 'memento' FROM stdin;
+Timeo puellas oscula dantes
+Utilitas.Venustas.Firmitas
+\.
+UNLOCK TABLES;
+
+--
+-- Table structure for table 'n_recount'
+--
+
+;
+CREATE TABLE 'n_recount' (
+  'node_id' INT4 NOT NULL,
+  'children' INT4 NOT NULL DEFAULT '0',
+  'descendants' INT4 NOT NULL DEFAULT '0',
+  'k' INT4 NOT NULL DEFAULT '0',
+  PRIMARY KEY ('node_id')
+
+);
+
+--
+-- Dumping data for table 'n_recount'
+--
+
+LOCK TABLES 'n_recount' WRITE;
+UNLOCK TABLES;
+
+--
+-- Table structure for table 'neurons'
+--
+
+;
+CREATE TABLE 'neurons' (
+  'synapse_weight' FLOAT8 NOT NULL DEFAULT '1',
+  'dst' INT4 DEFAULT NULL,
+  'src' INT4 DEFAULT NULL,
+  'synapse' INT4 NOT NULL DEFAULT '0',
+  'link' enum('hard','soft','bookmark','synapse') DEFAULT 'soft',
+  'last_impulse' timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  'synapse_created' TIMESTAMP DEFAULT NULL,
+  'dst_vector' char(232) DEFAULT NULL,
+  'synapse_creator' INT4 NOT NULL DEFAULT '0'
+);
+
+--
+-- Dumping data for table 'neurons'
+--
+
+LOCK TABLES 'neurons' WRITE;
+UNLOCK TABLES;
+
+--
+-- Table structure for table 'node_access'
+--
+
+;
+CREATE TABLE 'node_access' (
+  'node_id' INT4 NOT NULL DEFAULT '0',
+  'user_id' INT4 NOT NULL DEFAULT '0',
+  'node_bookmark' enum('yes','no') DEFAULT 'no',
+  'node_permission' enum('master','op','access','silence','ban','execute') DEFAULT NULL,
+  'node_user_subchild_count' INT4 DEFAULT NULL,
+  'last_visit' TIMESTAMP DEFAULT NULL,
+  'visits' INT4 DEFAULT '0',
+  'bookmark_category' INT4 DEFAULT NULL,
+  'given_k' enum('yes','no') DEFAULT 'no'
+);
+
+--
+-- Dumping data for table 'node_access'
+--
+
+LOCK TABLES 'node_access' WRITE;
+UNLOCK TABLES;
+
+--
+-- Temporary table structure for view 'node_content'
+--
+
+;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+  'node_id' INT4,
+  'node_name' varchar(132),
+  'node_content' text
+);
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table 'node_vector'
+--
+
+;
+CREATE TABLE 'node_vector' (
+  'node_vector_id' INT4 NOT NULL AUTO_INCREMENT,
+  'node_id' INT4 NOT NULL,
+  'node_parent' INT4 NOT NULL DEFAULT '0',
+  'node_vector' varchar(400) NOT NULL,
+  'is_hl' INT2 NOT NULL DEFAULT '0',
+  PRIMARY KEY ('node_vector_id')
+
+);
+
+--
+-- Dumping data for table 'node_vector'
+--
+
+LOCK TABLES 'node_vector' WRITE;
+UNLOCK TABLES;
+
+--
+-- Table structure for table 'nodes'
+--
+
+;
+CREATE TABLE 'nodes' (
+  'node_id' INT4 NOT NULL AUTO_INCREMENT,
+  'node_name' varchar(132) DEFAULT NULL,
+  'node_parent' INT4 NOT NULL DEFAULT '0',
+  'node_type' INT4 DEFAULT '1',
+  'node_external_access' enum('yes','no') DEFAULT 'no',
+  'node_system_access' enum('public','moderated','private','cube','crypto') DEFAULT 'public',
+  'node_children_count' INT4 DEFAULT '0',
+  'node_creator' INT4 DEFAULT NULL,
+  'node_created' TIMESTAMP DEFAULT NULL,
+  'lastchild_created' timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  'k' INT4 DEFAULT '0',
+  'node_views' INT4 DEFAULT NULL,
+  'node_descendant_count' INT4 DEFAULT NULL,
+  'lastdescendant_created' TIMESTAMP DEFAULT NULL,
+  'template_id' INT4 DEFAULT NULL,
+  'node_updated' TIMESTAMP DEFAULT NULL,
+  'external_link' varchar(123) DEFAULT NULL,
+  'node_vector' varchar(230) DEFAULT NULL,
+  'node_content' text,
+  'node_weight' FLOAT8  DEFAULT '1',
+  'nl2br' INT2 NOT NULL DEFAULT '1',
+  PRIMARY KEY ('node_id')
+
+);
+
+--
+-- Dumping data for table 'nodes'
+--
+
+LOCK TABLES 'nodes' WRITE;
+UNLOCK TABLES;
+
+--
+-- Table structure for table 'nv_status'
+--
+
+;
+CREATE TABLE 'nv_status' (
+  'node_id' INT4 NOT NULL AUTO_INCREMENT,
+  'children' INT4 NOT NULL DEFAULT '0',
+  'done' INT4 NOT NULL DEFAULT '0',
+  PRIMARY KEY ('node_id')
+
+);
+
+--
+-- Dumping data for table 'nv_status'
+--
+
+LOCK TABLES 'nv_status' WRITE;
+UNLOCK TABLES;
+
+--
+-- Table structure for table 'poll'
+--
+
+;
+CREATE TABLE 'poll' (
+  'poll_id' INT4 NOT NULL AUTO_INCREMENT,
+  'node_id' INT4 NOT NULL,
+  'user_id' INT4 NOT NULL,
+  'question' varchar(255) NOT NULL,
+  'begin' TIMESTAMP NOT NULL,
+  'end' TIMESTAMP DEFAULT NULL,
+  PRIMARY KEY ('poll_id')
+
+);
+
+--
+-- Dumping data for table 'poll'
+--
+
+LOCK TABLES 'poll' WRITE;
+UNLOCK TABLES;
+
+--
+-- Table structure for table 'poll_option'
+--
+
+;
+CREATE TABLE 'poll_option' (
+  'poll_option_id' INT4 NOT NULL AUTO_INCREMENT,
+  'poll_id' INT4 NOT NULL,
+  'option' varchar(255) NOT NULL,
+  PRIMARY KEY ('poll_option_id')
+
+);
+
+--
+-- Dumping data for table 'poll_option'
+--
+
+LOCK TABLES 'poll_option' WRITE;
+UNLOCK TABLES;
+
+--
+-- Table structure for table 'poll_vote'
+--
+
+;
+CREATE TABLE 'poll_vote' (
+  'poll_vote_id' INT4 NOT NULL AUTO_INCREMENT,
+  'poll_id' INT4 NOT NULL,
+  'poll_option_id' INT4 NOT NULL,
+  'user_id' INT4 NOT NULL,
+  'date' TIMESTAMP NOT NULL,
+  PRIMARY KEY ('poll_vote_id')
+
+);
+
+--
+-- Dumping data for table 'poll_vote'
+--
+
+LOCK TABLES 'poll_vote' WRITE;
+UNLOCK TABLES;
+
+--
+-- Table structure for table 'registrations'
+--
+
+;
+CREATE TABLE 'registrations' (
+  'user_id' INT4 NOT NULL,
+  'reg_content' TEXT DEFAULT '' NOT NULL,
+  'reg_date' timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  'registrators' varchar(230) DEFAULT NULL,
+  PRIMARY KEY ('user_id')
+
+);
+
+--
+-- Dumping data for table 'registrations'
+--
+
+LOCK TABLES 'registrations' WRITE;
+UNLOCK TABLES;
+
+--
+-- Table structure for table 'tiamat'
+--
+
+;
+CREATE TABLE 'tiamat' (
+  'node_id' INT4 NOT NULL DEFAULT '0',
+  'node_name' varchar(132) DEFAULT NULL,
+  'node_parent' INT4 NOT NULL DEFAULT '0',
+  'node_vector' varchar(232) DEFAULT NULL,
+  'node_external_access' enum('yes','no') DEFAULT 'no',
+  'node_system_access' enum('public','moderated','private','personal','crypto') DEFAULT 'public',
+  'node_children_count' INT4 DEFAULT '0',
+  'node_creator' INT4 DEFAULT NULL,
+  'node_created' TIMESTAMP DEFAULT NULL,
+  'lastchild_created' timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  'k' INT4 DEFAULT '0',
+  'node_views' INT4 DEFAULT NULL,
+  'node_destructor' INT4 DEFAULT NULL,
+  'node_content' text,
+  'node_descendant_count' INT4 DEFAULT NULL,
+  'lastdescendant_created' TIMESTAMP DEFAULT NULL,
+  'template_id' INT4 DEFAULT NULL,
+  'update_performed' timestamp NOT NULL DEFAULT '0001-01-01 00:00:00',
+  'external_link' varchar(123) DEFAULT NULL
+);
+
+--
+-- Dumping data for table 'tiamat'
+--
+
+LOCK TABLES 'tiamat' WRITE;
+UNLOCK TABLES;
+
+--
+-- Table structure for table 'users'
+--
+
+;
+CREATE TABLE 'users' (
+  'user_id' INT4 NOT NULL DEFAULT '0',
+  'login' varchar(66) DEFAULT NULL,
+  'xmpp' varchar(66) DEFAULT NULL,
+  'password' varchar(230) NOT NULL,
+  'email' varchar(50) DEFAULT NULL,
+  'user_gpg_prv' varchar(5000) DEFAULT NULL,
+  'user_gpg_pub' varchar(5000) DEFAULT NULL,
+  'last_action' timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  'user_action' varchar(75) DEFAULT NULL,
+  'user_action_id' INT4 DEFAULT NULL,
+  'user_mail' INT4 NOT NULL DEFAULT '0',
+  'user_mail_id' INT4 NOT NULL DEFAULT '0',
+  'user_mail_name' varchar(66) DEFAULT NULL,
+  'listing_amount' INT4 DEFAULT '32',
+  'session_string' varchar(64) DEFAULT NULL,
+  'user_k' INT4 DEFAULT '23',
+  'user_location_vector' varchar(123) DEFAULT NULL,
+  'ldap_id' INT4 NOT NULL AUTO_INCREMENT,
+  'listing_order' enum('asc','desc') DEFAULT 'desc',
+  'header_id' INT4 DEFAULT NULL,
+  'cube_vector' varchar(23) DEFAULT NULL,
+  'k_wallet' INT4 DEFAULT '0',
+  'hash' varchar(23) DEFAULT NULL,
+  'acc_lockout' TIMESTAMP DEFAULT NULL,
+  'moods' varchar(123) DEFAULT NULL,
+  'invisible' enum('yes','no') DEFAULT 'no',
+  'password_change_period' INT4 DEFAULT NULL,
+  'login_retry' INT4 NOT NULL DEFAULT '0',
+  'date_last_login' TIMESTAMP NOT NULL DEFAULT '0001-01-01 00:00:00',
+  'date_password_changed' TIMESTAMP NOT NULL,
+  'date_login_failed' TIMESTAMP NOT NULL,
+  'mail_notify' INT4 NOT NULL DEFAULT '0',
+  'bookstyle' INT4 NOT NULL DEFAULT '0',
+  'user_setting_metadata' TEXT DEFAULT '' NOT NULL,
+  'guild_id' INT4 DEFAULT '4738121',
+  PRIMARY KEY ('user_id')
+
+);
+
+--
+-- Dumping data for table 'users'
+--
+
+LOCK TABLES 'users' WRITE;
+UNLOCK TABLES;
+
+--
+-- Temporary table structure for view 'view_nodes'
+--
+
+;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+  'node_id' INT4,
+  'node_created' varchar(8),
+  'node_updated' varchar(8),
+  'node_creator' INT4,
+  'node_name' varchar(132),
+  'node_content' text
+);
+SET character_set_client = @saved_cs_client;
+
+--
+-- Final view structure for view 'node_content'
+--
+
+
+--
+-- Final view structure for view 'view_nodes'
+--
+
+
+
+-- Dump completed on 2012-07-30 14:45:46
+
+
+COMMIT;

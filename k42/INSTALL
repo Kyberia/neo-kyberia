@@ -1,0 +1,18 @@
+0. You will need Apache webserver and PostgreSQL database, install them.
+
+1. Copy sample Apache configuration file from setup/apache/ directory
+   and customize it. Start your Apache webserver. 
+
+2. Start you PostgreSQL database and import initial data.
+   ( something like: 
+   psql -U kyberia -h 127.0.0.1 kyberia42 < setup/psql_init_dump.sql )
+
+3. Copy K42 files to webserver accessible directory, fix permissions if needed.
+
+4. Create Smarty's cache directory k42/inc/smarty/templates_c, which has to be
+   writable by Apache.
+
+4. Edit configuration file config/config.inc, so application can access 
+   a database.
+
+5. Kyberia version K42 should be ready
