@@ -1,0 +1,44 @@
+FROM centos:7
+
+RUN rpm --import https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7 && \
+    rpm --import https://mirror.webtatic.com/yum/RPM-GPG-KEY-webtatic-el7 && \
+    rpm --rebuilddb && \
+    yum -y install centos-release-scl centos-release-scl-rh epel-release deltarpm && \
+    rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
+
+RUN yum -y update && yum clean all && \
+    yum -y install zsh wget supervisor
+
+SHELL ["/bin/zsh", "-lc"] 
+
+RUN yum -y install httpd24 \
+        php71w-fpm rh-php70-mysqlnd php71w-cli php71w-devel php71w-mbstring \
+        less vim git && \
+    yum -y groupinstall 'Development Tools'
+
+# Compile and install XDebug extension for php
+RUN mkdir -p /root/soft && cd /root/soft && \
+    wget https://xdebug.org/files/xdebug-2.5.0.tgz && \
+    tar xf xdebug-2.5.0.tgz && \
+    cd xdebug-2.5.0 && phpize && \
+    ./configure --enable-xdebug && make install && \
+    cd .. && rm -rf xdebug-2.5.0*
+
+# Setup php to use XDebug
+RUN echo -e "\
+zend_extension=/usr/lib64/php/modules/xdebug.so\n\
+xdebug.remote_enable=1\n\
+xdebug.remote_connect_back=1" > /etc/php.d/xdebug.ini
+
+RUN git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh && \
+    cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc && \
+    sed -ie 's/^# DISABLE_AUTO_UPDATE=/DISABLE_AUTO_UPDATE=/' ~/.zshrc && \
+    sed -ie 's/^plugins=(git)/plugins=(git wd)/' ~/.zshrc
+
+RUN mkdir -p /kyberia/{www,data,tmp}
+
+COPY docker/supervisord.conf /etc/supervisord.conf
+COPY docker/httpd24_kyberia.conf /opt/rh/httpd24/root/etc/httpd/conf.d/kyberia.conf
+COPY docker/warprc /root/.warprc
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
