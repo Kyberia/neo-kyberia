@@ -1,5 +1,9 @@
 FROM centos:7
 
+# Add mysql user and group first to make sure their IDs get assigned consistently,
+# regardless of whatever dependencies get added.
+RUN groupadd -r mysql && useradd -r -g mysql mysql
+
 RUN rpm --import https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7 && \
     rpm --import https://mirror.webtatic.com/yum/RPM-GPG-KEY-webtatic-el7 && \
     rpm --rebuilddb && \
@@ -30,6 +34,16 @@ zend_extension=/usr/lib64/php/modules/xdebug.so\n\
 xdebug.remote_enable=1\n\
 xdebug.remote_connect_back=1" > /etc/php.d/xdebug.ini
 
+# Install php composer 
+RUN wget -q https://getcomposer.org/download/1.3.0/composer.phar -O /usr/local/bin/composer.phar && \
+    chmod a+x /usr/local/bin/composer.phar 
+
+RUN yum -y install \
+        http://www.percona.com/downloads/percona-release/redhat/0.1-4/percona-release-0.1-4.noarch.rpm && \
+    yum -y install Percona-Server-{server,client}-57 && \
+    chown mysql:mysql /var/log/mysqld.log
+
+# oh-my-zsh
 RUN git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh && \
     cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc && \
     sed -ie 's/^# DISABLE_AUTO_UPDATE=/DISABLE_AUTO_UPDATE=/' ~/.zshrc && \
@@ -39,6 +53,7 @@ RUN mkdir -p /kyberia/{www,data,tmp}
 
 COPY docker/supervisord.conf /etc/supervisord.conf
 COPY docker/httpd24_kyberia.conf /opt/rh/httpd24/root/etc/httpd/conf.d/kyberia.conf
+COPY docker/run_percona.sh /usr/local/bin/run_percona.sh
 COPY docker/warprc /root/.warprc
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
