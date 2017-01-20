@@ -56,4 +56,29 @@ COPY docker/httpd24_kyberia.conf /opt/rh/httpd24/root/etc/httpd/conf.d/kyberia.c
 COPY docker/run_percona.sh /usr/local/bin/run_percona.sh
 COPY docker/warprc /root/.warprc
 
+RUN yum -y install psmisc
+
+USER mysql
+RUN (run_percona.sh &) && \
+    while [[ ! -S /var/lib/mysql/mysql.sock ]] { sleep 1 } && \
+    killall mysqld && sleep 3
+
+# mysql 5.7 sets a random default root password. Disable it.
+RUN while { read i } \
+        { [[ $i =~ 'temporary password is generated.*localhost: (.*)' ]] && mpasswd=$match[1] && break } \
+        < /var/log/mysqld.log && \
+    (run_percona.sh &) && \
+    while [[ ! -S /var/lib/mysql/mysql.sock ]] { sleep 1 } && \
+    mysql -u root "-p$mpasswd" --connect-expired-password -e " \
+        ALTER USER 'root'@'localhost' IDENTIFIED BY '' ; FLUSH PRIVILEGES;"
+        
+RUN (run_percona.sh &) && \
+    while [[ ! -S /var/lib/mysql/mysql.sock ]] { sleep 1 } && \
+    mysql -u root mysql -e ' \
+        create user kyberia@localhost identified by "blah"; \
+        create database kyberia2; \
+        grant all on kyberia2.* to kyberia@localhost;'
+USER root
+    
+
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
