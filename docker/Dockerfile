@@ -16,7 +16,7 @@ RUN yum -y update && yum clean all && \
 SHELL ["/bin/zsh", "-lc"] 
 
 RUN yum -y install httpd24 \
-        php71w-fpm rh-php70-mysqlnd php71w-cli php71w-devel php71w-mbstring \
+        php71w-fpm php71w-mysqlnd php71w-cli php71w-devel php71w-mbstring \
         less vim git && \
     yum -y groupinstall 'Development Tools'
 
@@ -49,12 +49,14 @@ RUN git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh && \
     sed -ie 's/^# DISABLE_AUTO_UPDATE=/DISABLE_AUTO_UPDATE=/' ~/.zshrc && \
     sed -ie 's/^plugins=(git)/plugins=(git wd)/' ~/.zshrc
 
-RUN mkdir -p /kyberia/{www,data,tmp}
+
+RUN mkdir -p /kyberia/data
 
 COPY docker/supervisord.conf /etc/supervisord.conf
 COPY docker/httpd24_kyberia.conf /opt/rh/httpd24/root/etc/httpd/conf.d/kyberia.conf
 COPY docker/run_percona.sh /usr/local/bin/run_percona.sh
 COPY docker/warprc /root/.warprc
+COPY data/kyberia-db.sql /kyberia/data/kyberia-db.sql
 
 RUN yum -y install psmisc
 
@@ -77,8 +79,8 @@ RUN (run_percona.sh &) && \
     mysql -u root mysql -e ' \
         create user kyberia@localhost identified by "blah"; \
         create database kyberia2; \
-        grant all on kyberia2.* to kyberia@localhost;'
+        grant all on kyberia2.* to kyberia@localhost;' && \
+    mysql -u kyberia -pblah kyberia2 -e 'source /kyberia/data/kyberia-db.sql'
 USER root
     
-
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
