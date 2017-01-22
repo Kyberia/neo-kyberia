@@ -52,10 +52,7 @@ RUN git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh && \
 
 RUN mkdir -p /kyberia/data
 
-COPY docker/supervisord.conf /etc/supervisord.conf
-COPY docker/httpd24_kyberia.conf /opt/rh/httpd24/root/etc/httpd/conf.d/kyberia.conf
 COPY docker/run_percona.sh /usr/local/bin/run_percona.sh
-COPY docker/warprc /root/.warprc
 COPY data/kyberia-db.sql /kyberia/data/kyberia-db.sql
 
 RUN yum -y install psmisc
@@ -82,5 +79,11 @@ RUN (run_percona.sh &) && \
         grant all on kyberia2.* to kyberia@localhost;' && \
     mysql -u kyberia -pblah kyberia2 -e 'source /kyberia/data/kyberia-db.sql'
 USER root
+
+COPY docker/supervisord.conf /etc/supervisord.conf
+COPY docker/httpd24_kyberia.conf /opt/rh/httpd24/root/etc/httpd/conf.d/kyberia.conf
+COPY docker/warprc /root/.warprc
+
+EXPOSE 80
     
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
