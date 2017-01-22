@@ -1,6 +1,6 @@
 {
-    "name": "kybu/symfony-app",
-    "license": "proprietary",
+    "name": "kyberia/neo",
+    "license": "AGPL-3.0",
     "type": "project",
     "autoload": {
         "psr-4": {
