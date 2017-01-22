@@ -11,12 +11,13 @@ RUN rpm --import https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7 && \
     rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
 
 RUN yum -y update && yum clean all && \
-    yum -y install zsh wget supervisor
+    yum -y install zsh wget supervisor psmisc
 
 SHELL ["/bin/zsh", "-lc"] 
 
 RUN yum -y install httpd24 \
         php71w-fpm php71w-mysqlnd php71w-cli php71w-devel php71w-mbstring \
+        php71w-xml php71w-intl php71w-process \
         less vim git && \
     yum -y groupinstall 'Development Tools'
 
@@ -54,8 +55,6 @@ RUN mkdir -p /kyberia/data
 
 COPY docker/run_percona.sh /usr/local/bin/run_percona.sh
 COPY data/kyberia-db.sql /kyberia/data/kyberia-db.sql
-
-RUN yum -y install psmisc
 
 USER mysql
 RUN (run_percona.sh &) && \
